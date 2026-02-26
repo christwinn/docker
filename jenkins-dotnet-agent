@@ -1,0 +1,68 @@
+## build
+
+# fork of https://github.com/jenkins-docs/quickstart-tutorials/blob/main/dockerfiles/dotnet/Dockerfile
+  
+# baseline image for agent
+FROM jenkins/inbound-agent:latest
+
+# change to root for permissions to setup
+USER 0
+
+# install dotnet dependencies
+# note originally was libicu72, does not exist
+RUN \
+  apt-get update && \
+  apt-get install -y --no-install-recommends \
+    libc6 libgcc1 libgssapi-krb5-2 \
+    libicu-dev libssl3 libstdc++6 \
+    zlib1g wget && \
+  apt-get clean && \
+  rm -rf /var/lib/apt/lists/*
+
+# Now time to install dotnet
+# set the version
+ARG DOTNET_VERSION=8.0
+
+# Set SHELL flags for RUN commands to allow -e and pipefail
+# Rationale:https://github.com/hadolint/hadolint/wiki/DL4006
+SHELL ["/bin/bash", "-eo", "pipefail", "-c"]
+
+# define location for dotnet
+ENV DOTNET_ROOT=/usr/local/dotnet
+
+# download installation script
+# set execute
+# run script
+RUN \
+  wget \
+    https://dot.net/v1/dotnet-install.sh \
+    -O dotnet-install.sh && \
+  chmod +x ./dotnet-install.sh && \
+  ./dotnet-install.sh \
+    --channel ${DOTNET_VERSION} \
+    --install-dir $DOTNET_ROOT
+
+# add dotnet to path
+ENV PATH=$PATH:$DOTNET_ROOT:$DOTNET_ROOT/tools
+
+# make permanent
+# show dotnet sdks
+RUN \
+  echo "PATH=${PATH}" >> /etc/environment && \
+  dotnet --list-sdks
+
+# Maybe this is set in original jenkins/ssh-agent? but is '' here
+# && chown -R jenkins:jenkins "${JENKINS_AGENT_HOME}"
+
+## make
+#   docker build -t jenkins/inbound-agent-dotnet .
+
+## install
+#  docker run -d -name jenkins-agent-dotnet
+#    --restart=on-failure \
+#    -e JENKINS_URL=http://1.2.3.4:8080 \
+#    -e JENKINS_AGENT_NAME=agent-001 \
+#    -e JENKINS_SECRET=abcdefghijklmonpqrstuvwxyz \
+#    --volume jenkins-data:/var/jenkins_home \
+#    jenkins/inbound-agent-dotnet
+
