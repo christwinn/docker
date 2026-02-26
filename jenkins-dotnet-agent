@@ -58,7 +58,7 @@ RUN \
 #   docker build -t jenkins/inbound-agent-dotnet .
 
 ## install
-#  docker run -d -name jenkins-agent-dotnet
+#  docker run -d --name jenkins-agent-dotnet \
 #    --restart=on-failure \
 #    -e JENKINS_URL=http://1.2.3.4:8080 \
 #    -e JENKINS_AGENT_NAME=agent-001 \
