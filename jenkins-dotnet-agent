@@ -1,6 +1,7 @@
 ## build
 
 # fork of https://github.com/jenkins-docs/quickstart-tutorials/blob/main/dockerfiles/dotnet/Dockerfile
+# configures a docker image to run as an agent but has dotnet support
   
 # baseline image for agent
 FROM jenkins/inbound-agent:latest
@@ -53,6 +54,11 @@ RUN \
 
 # Maybe this is set in original jenkins/ssh-agent? but is '' here
 # && chown -R jenkins:jenkins "${JENKINS_AGENT_HOME}"
+
+# switchback to jenkins
+# without this step the container runs the user as root and 
+# then git fails as there are inconsistencies in the user
+USER 1000
 
 ## make
 #   docker build -t jenkins/inbound-agent-dotnet .
