@@ -63,7 +63,16 @@ USER 1000
 ## make
 #   docker build -t jenkins/inbound-agent-dotnet .
 
-## install
+## install 
+
+# can use compose.yaml, mix and match possible but 
+# jenkins-data is different for the 2 scenarios but 
+# is the same across each scenario 
+# i.e: 
+#  all "docker run" see the same jenkins-data 
+#  all compose see the same jenkins-data
+# BUT there are 2 jenkins-data
+
 #  docker run -d --name jenkins-agent-dotnet \
 #    --restart=on-failure \
 #    -e JENKINS_URL=http://1.2.3.4:8080 \
