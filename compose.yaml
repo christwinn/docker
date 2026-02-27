@@ -5,28 +5,28 @@ services:
     image: jenkins/inbound-agent-dotnet:latest
     volumes:
       - jenkins-data:/var/jenkins_home
-    env_file: agent1.env
+    env_file: agentfiles/agent1.env
     restart: unless-stopped
 
   jenkins-agent-2:
     image: jenkins/inbound-agent-dotnet:latest
     volumes:
       - jenkins-data:/var/jenkins_home
-    env_file: agent2.env
+    env_file: agentfiles/agent2.env
     restart: unless-stopped
 
   jenkins-agent-3:
     image: jenkins/inbound-agent-dotnet:latest
     volumes:
       - jenkins-data:/var/jenkins_home
-    env_file: agent3.env
+    env_file: agentfiles/agent3.env
     restart: unless-stopped
 
   jenkins-agent-4:
     image: jenkins/inbound-agent-dotnet:latest
     volumes:
       - jenkins-data:/var/jenkins_home
-    env_file: agent4.env
+    env_file: agentfiles/agent4.env
     restart: unless-stopped
 
 # this is a different jenkins-data dir to that if we use docker run ... --volume jenkins-data:/var/jenkins_home
